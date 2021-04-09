@@ -1,11 +1,17 @@
 from model import *
 from utils import *
-from config import CharCNNConfig, Config
+from config import *
 import sys
 import torch 
 import torch.nn as nn
 import torch.optim as optim
 from tqdm import tqdm
+
+def setup_seed(seed):
+     torch.manual_seed(seed)
+     torch.cuda.manual_seed_all(seed)
+     np.random.seed(seed)
+     torch.backends.cudnn.deterministic = True
 
 def run_epoch(model, train_iter, val_iter, epoch):
     losses = []
@@ -30,21 +36,25 @@ def run_epoch(model, train_iter, val_iter, epoch):
     print('Val Acc: {:.4f}, F1: {:.4f}'.format(val_acc, val_f1))
 
 if __name__ == '__main__':
+    setup_seed(20)
     # config = Config()
-    config = CharCNNConfig()
+    # config = CharCNNConfig()
+    config = TextRNNConfig()
     train_file = './data/train.csv'
     test_file = './data/test.csv'
     w2v_file = './data/glove.42B.300d.txt'
 
-    # dataset = Dataset(config)
-    dataset = CharCNNDataset(config)
+    dataset = Dataset(config)
+    # dataset = CharCNNDataset(config)
     print('Loading data...')
-    # dataset.load_data(w2v_file, train_file, test_file)
-    dataset.load_data(train_file, test_file)
+    dataset.load_data(w2v_file, train_file, test_file)
+    # dataset.load_data(train_file, test_file)
     print('Data loaded.')
 
     # model = RCNN(config, len(dataset.vocab), dataset.word_embeddings)
-    model = CharCNN(config, len(dataset.vocab), dataset.char_embeddings)
+    # model = CharCNN(config, len(dataset.vocab), dataset.char_embeddings)
+    model = TextRNN(config, len(dataset.vocab), dataset.word_embeddings)
+    print('===> Current Used Model: %s' % model.__class__.__name__)
     model.to(config.device)
     model.train()
     init_network(model)

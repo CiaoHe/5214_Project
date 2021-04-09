@@ -9,7 +9,7 @@ from .Base import BaseNet
 
 class CharCNN(BaseNet):
     def __init__(self, config, vocab_size, embeddings):
-        super(CharCNN, self).__init__(config, vocab_size, embeddings)
+        super(CharCNN, self).__init__(config)
         #Embed layer
         self.config = config
         embed_size = vocab_size

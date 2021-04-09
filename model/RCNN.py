@@ -7,7 +7,11 @@ from .Base import BaseNet
 
 class RCNN(BaseNet):
     def __init__(self, config, vocab_size, word_embeddings):
-        super(RCNN, self).__init__(config, vocab_size, word_embeddings)
+        super(RCNN, self).__init__(config)
+
+        #Embed layer
+        self.embeddings = nn.Embedding(vocab_size, self.config.embed_size)
+        self.embeddings.weight = nn.Parameter(word_embeddings, requires_grad=False)
 
         #Bi-lstm 
         self.lstm = nn.LSTM(
