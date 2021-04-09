@@ -6,7 +6,7 @@ class Config(object):
     output_size = 1
     max_epochs = 100
     hidden_size_linear = 64
-    lr = 1e-3
+    lr = 5e-2
     batch_size = 128
     max_sen_len = None
     dropout_keep = 0.5

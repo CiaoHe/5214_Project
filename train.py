@@ -21,8 +21,6 @@ def run_epoch(model, train_iter, val_iter, epoch):
         loss.backward()
         losses.append(loss.data.cpu().numpy())
         model.optimizer.step()
-        # model.scheduler.step()
-        # print(get_lr(model.scheduler))
     
     avg_train_loss = np.mean(losses)
     print('Average Train loss : {:.4f}'.format(avg_train_loss))
@@ -32,11 +30,13 @@ def run_epoch(model, train_iter, val_iter, epoch):
     print('Val Acc: {:.4f}, F1: {:.4f}'.format(val_acc, val_f1))
 
 if __name__ == '__main__':
+    # config = Config()
     config = CharCNNConfig()
     train_file = './data/train.csv'
     test_file = './data/test.csv'
     w2v_file = './data/glove.42B.300d.txt'
 
+    # dataset = Dataset(config)
     dataset = CharCNNDataset(config)
     print('Loading data...')
     # dataset.load_data(w2v_file, train_file, test_file)
@@ -51,11 +51,6 @@ if __name__ == '__main__':
     model.add_loss_op(nn.BCELoss())
     model.add_optimizer(optim.Adam(model.parameters(), lr=config.lr))
     scheduler = optim.lr_scheduler.ExponentialLR(optimizer=model.optimizer, gamma=0.99)
-    # scheduler = optim.lr_scheduler.StepLR(model.optimizer, step_size=30, gamma=0.1)
-    # scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer=model.optimizer, T_max=100)
-    # scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts()
-    # scheduler = optim.lr_scheduler.CyclicLR(model.optimizer,base_lr=1e-4,max_lr=5e-2,cycle_momentum=False,step_size_up=len(dataset.train_iterator)//2)
-    # scheduler = optim.lr_scheduler.ReduceLROnPlateau(model.optimizer, mode='max')
     model.add_lr_scheduler(scheduler)
 
     #beign train

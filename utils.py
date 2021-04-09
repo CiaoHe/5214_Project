@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np 
 from sklearn.metrics import accuracy_score, f1_score
 import re
+from text_preprocess import preprocess
 
 def clean_text(text):
     #2. remove unkonwn characrters
@@ -70,7 +71,8 @@ class Dataset(object):
 
     def load_data(self, w2v_file, train_file, test_file, val_file=None):
         NLP = spacy.load("en_core_web_sm")
-        tokenizer = lambda sent: [x.text for x in NLP.tokenizer(clean_text(sent))]
+        text_preprocessor = preprocess
+        tokenizer = lambda sent: [x.text for x in NLP.tokenizer(text_preprocessor(sent))]
 
         TEXT = data.Field(sequential = True, tokenize=tokenizer, lower=True, fix_length=self.config.max_sen_len)
         LABEL = data.Field(sequential=False, use_vocab=False)
@@ -122,7 +124,8 @@ class CharCNNDataset(Dataset):
         super(CharCNNDataset, self).__init__(config)
     
     def load_data(self, train_file, test_file, val_file=None):
-        tokenizer = lambda sent: list(sent[::-1]) #reverse and split sent to List(char)
+        text_preprocessor = clean_text
+        tokenizer = lambda sent: list(text_preprocessor(sent[::-1])) #reverse and split sent to List(char)
         TEXT = data.Field(sequential = True, tokenize=tokenizer, lower=True, fix_length=self.config.max_sen_len)
         LABEL = data.Field(sequential=False, use_vocab=False)
         train_datafields = [('text',TEXT),('label',LABEL)]
