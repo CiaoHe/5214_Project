@@ -57,8 +57,8 @@ def main(args):
     encoder.eval()
     encoder.to(device)
     
-    # for version, event_names in zip(["v3", "v4", "v1"], [const.events_v3, const.events_v4, const.events_v1]):
-    for version, event_names in zip(["v3"], [const.events_v3]):
+    for version, event_names in zip(['d2'], [const.events_d2]):
+    # for version, event_names in zip(['d1'], [const.events_d1]):
         with open("log/ewc_{}.log".format(args.custom_name), 'a') as out_file:
             out_file.write(version)
             out_file.write("\n")
@@ -66,7 +66,7 @@ def main(args):
 
 
             # PREPARE SCENARIO FOR CL
-            scenario = generate_rumour_scenario(tokenizer, event_names, args.dataset_name, max_len=128, use_topic_token=args.use_topic_token)
+            scenario = generate_rumour_scenario(tokenizer, event_names, args.dataset_name, max_len=128)
 
 
             if args.only_mlp:

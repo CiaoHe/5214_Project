@@ -67,13 +67,14 @@ def main(args):
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     
 
-    for version, event_names in zip(["v4", "v3", "v1"], [const.events_v4, const.events_v3, const.events_v1]):
+    for version, event_names in zip(['d2'], [const.events_d2]):
+    # for version, event_names in zip(['d1'], [const.events_d1]):
         with open("log/replay_{}.log".format(replay_size), 'a') as out_file:
             out_file.write(version)
             out_file.write("\n")
 
             # --- SCENARIO CREATION
-            scenario = generate_rumour_scenario(tokenizer, event_names, args.dataset_name, max_len=128, use_topic_token=args.use_topic_token)
+            scenario = generate_rumour_scenario(tokenizer, event_names, args.dataset_name, max_len=128)
             # ---------
 
             # MODEL CREATION
@@ -85,7 +86,7 @@ def main(args):
             # CREATE THE STRATEGY INSTANCE (NAIVE) with REPLAY PLUGIN
             cl_strategy = Naive(model, optimizer,
                                 CrossEntropyLoss(),
-                                train_mb_size=4, train_epochs=10, eval_mb_size=4, device=device,
+                                train_mb_size=4, train_epochs=args.epochs, eval_mb_size=4, device=device,
                                 plugins=[ReplayPlugin(mem_size=replay_size)],
                                 evaluator=eval_plugin
                                 )
@@ -119,7 +120,8 @@ if __name__ == '__main__':
                         help='Select zero-indexed cuda device. -1 to use CPU.')
     parser.add_argument('--use_topic_token', action='store_true')
     parser.add_argument('--dataset_name', type=str, default="topics", help='Name of the dataset')
-
+    parser.add_argument('--epochs', type=int, default=10,
+                        help='Number of training epochs.')
     
     args = parser.parse_args()
     main(args)

@@ -22,8 +22,7 @@ from dataset import generate_rumour_scenario
 from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTokenizer
 
 
-model_path = '/home/nayeon/misinfo/results/basil_detection,basil_type,basil_polarity,webis,clickbait/lr.5e-06_bz.1_mtloss.1.0-1.0_evalmetric_f1_naacl21_mt_joint_loss_s42/best_model'
-# model_path = "bert-base-uncased"
+model_path = "bert-base-uncased"
 
 def main(args):
     # --- CONFIG
@@ -36,13 +35,13 @@ def main(args):
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     config = AutoConfig.from_pretrained(model_path, num_labels=3, return_dict=False)
 
-    # for version, event_names in zip(["v1", "v3", "v4"], [const.events_v1, const.events_v3, const.events_v4]):
-    for version, event_names in zip(['d1'], [const.events_d1]):
+    for version, event_names in zip(['d2'], [const.events_d2]):
+    # for version, event_names in zip(['d1'], [const.events_d1]):
         with open("log/{}.log".format(args.log_f_name), 'a') as out_file:
             out_file.write("{}, epoch:{}, lr:{} \n".format(version, args.epochs, args.lr))
 
             # PREPARE SCENARIO FOR CL
-            scenario = generate_rumour_scenario(tokenizer, event_names, args.dataset_name, max_len=128, use_topic_token=args.use_topic_token)
+            scenario = generate_rumour_scenario(tokenizer, event_names, args.dataset_name, max_len=128)
 
             # MODEL CREATION
             model = AutoModelForSequenceClassification.from_pretrained(model_path, config=config)

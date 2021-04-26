@@ -80,8 +80,8 @@ def main(args):
     encoder.eval()
     encoder.to(device)
 
-    # for version, event_names in zip(["v3"], [const.events_v3]):
-    for version, event_names in zip(["v4"], [const.events_v4]):
+    for version, event_names in zip(['d2'], [const.events_d2]):
+    # for version, event_names in zip(['d1'], [const.events_d1]):
         with open("log/gem_{}.log".format(args.custom_name), 'a') as out_file:
             out_file.write(version)
             out_file.write("\n")

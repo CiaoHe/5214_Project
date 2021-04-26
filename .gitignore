@@ -4,3 +4,4 @@ save/
 output/
 __pycache__/
 data/v1
+log/
