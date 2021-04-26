@@ -8,7 +8,7 @@ CUDA_VISIBLE_DEVICES=3 python run_ewc.py --only_mlp --ewc_lambda 0.4 --custom_na
 
 # CUDA_VISIBLE_DEVICES=4 python run_ewc.py --only_mlp --ewc_lambda 0.4 --custom_name lambda0.4
 
-# CUDA_VISIBLE_DEVICES=3 python run_gem.py --only_mlp --custom_name 50 --patterns_per_exp 50 --epochs 2 --memory_strength 0.2
+CUDA_VISIBLE_DEVICES=5 python run_gem.py --only_mlp --custom_name 50 --patterns_per_exp 50 --epochs 2 --memory_strength 0.2 --dataset_name crisis_nlp_topics
 
 
 
